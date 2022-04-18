@@ -15,7 +15,6 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpVersion;
 import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -28,6 +27,7 @@ public class HttpClient
 
     public static final int TIMEOUT = 5000;
     private static final Cache<String, InetAddress> addressCache = CacheBuilder.newBuilder().expireAfterWrite( 1, TimeUnit.MINUTES ).build();
+    private static final io.netty.resolver.dns.DnsAddressResolverGroup dnsResolverGroup = new io.netty.resolver.dns.DnsAddressResolverGroup( PipelineUtils.getDatagramChannel(), io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider.INSTANCE );
 
     @SuppressWarnings("UnusedAssignment")
     public static void get(String url, EventLoop eventLoop, final Callback<String> callback)
@@ -57,20 +57,6 @@ public class HttpClient
             }
         }
 
-        InetAddress inetHost = addressCache.getIfPresent( uri.getHost() );
-        if ( inetHost == null )
-        {
-            try
-            {
-                inetHost = InetAddress.getByName( uri.getHost() );
-            } catch ( UnknownHostException ex )
-            {
-                callback.done( null, ex );
-                return;
-            }
-            addressCache.put( uri.getHost(), inetHost );
-        }
-
         ChannelFutureListener future = new ChannelFutureListener()
         {
             @Override
@@ -92,7 +78,13 @@ public class HttpClient
             }
         };
 
+        getWithNettyResolver( eventLoop, uri, port, future, callback, ssl );
+    }
+
+    private static void getWithNettyResolver(EventLoop eventLoop, URI uri, int port, ChannelFutureListener future, Callback<String> callback, boolean ssl)
+    {
+        java.net.InetSocketAddress address = java.net.InetSocketAddress.createUnresolved( uri.getHost(), port );
         new Bootstrap().channel( PipelineUtils.getChannel( null ) ).group( eventLoop ).handler( new HttpInitializer( callback, ssl, uri.getHost(), port ) ).
-                option( ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT ).remoteAddress( inetHost, port ).connect().addListener( future );
+                option( ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT ).resolver( dnsResolverGroup ).remoteAddress( address ).connect().addListener( future );
     }
 }
