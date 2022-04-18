@@ -51,18 +51,21 @@ public class PluginMessage extends DefinedPacket
         }
     };
 
-    public PluginMessage(String tag, ByteBuf data, boolean allowExtendedPacket) {
+    public PluginMessage(String tag, ByteBuf data, boolean allowExtendedPacket)
+    {
         this( tag, ByteBufUtil.getBytes( data ), allowExtendedPacket );
     }
 
     private String tag;
     private byte[] data;
 
-    public void setData(byte[] data) {
+    public void setData(byte[] data)
+    {
         this.data = Preconditions.checkNotNull( data, "Null data" );
     }
 
-    public void setData(ByteBuf buf) {
+    public void setData(ByteBuf buf)
+    {
         Preconditions.checkNotNull( buf, "Null buffer" );
         setData( ByteBufUtil.getBytes( buf ) );
     }
