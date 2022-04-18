@@ -49,9 +49,9 @@ import net.md_5.bungee.protocol.Varint21LengthFieldPrepender;
 public class PipelineUtils
 {
 
-    public static final AttributeKey<ListenerInfo> LISTENER = AttributeKey.valueOf( "ListerInfo" );
-    public static final AttributeKey<UserConnection> USER = AttributeKey.valueOf( "User" );
-    public static final AttributeKey<BungeeServerInfo> TARGET = AttributeKey.valueOf( "Target" );
+    public static final AttributeKey<ListenerInfo> LISTENER = AttributeKey.newInstance( "ListerInfo" );
+    public static final AttributeKey<UserConnection> USER = AttributeKey.newInstance( "User" );
+    public static final AttributeKey<BungeeServerInfo> TARGET = AttributeKey.newInstance( "Target" );
     public static final ChannelInitializer<Channel> SERVER_CHILD = new ChannelInitializer<Channel>()
     {
         @Override
