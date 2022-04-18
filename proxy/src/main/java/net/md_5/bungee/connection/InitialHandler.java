@@ -282,7 +282,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
     @Override
     public void handle(PingPacket ping) throws Exception
     {
-        if (!ACCEPT_INVALID_PACKETS)
+        if ( !ACCEPT_INVALID_PACKETS )
         {
             Preconditions.checkState( thisState == State.PING, "Not expecting PING" );
         }

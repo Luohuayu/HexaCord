@@ -499,7 +499,8 @@ public class BungeeCord extends ProxyServer
                 bossEventLoopGroup.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
                 workerEventLoopGroup.awaitTermination( Long.MAX_VALUE, TimeUnit.NANOSECONDS );
                 break;
-            } catch ( InterruptedException ignored ) {
+            } catch ( InterruptedException ignored )
+            {
             }
         }
 
