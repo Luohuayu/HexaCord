@@ -67,7 +67,7 @@ public class Configuration implements ProxyConfig
     private String customServerName = "HexaCord";
     private boolean alwaysHandlePackets = false;
     private boolean preventProxyConnections;
-    private boolean forgeSupport;
+    private boolean forgeSupport = true; // Waterfall: default to enabled
     private int pluginChannelLimit = 128;
 
     public void load()
