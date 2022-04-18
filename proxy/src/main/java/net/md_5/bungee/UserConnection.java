@@ -380,7 +380,11 @@ public final class UserConnection implements ProxiedPlayer
 
     private String connectionFailMessage(Throwable cause)
     {
-        return Util.exception( cause, false );
+        // Waterfall start
+        cause.printStackTrace();
+        return "";
+        // return Util.exception( cause, false );
+        // Waterfall end
     }
 
     @Override
